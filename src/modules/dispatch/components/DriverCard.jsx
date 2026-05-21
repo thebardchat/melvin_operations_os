@@ -1,117 +1,174 @@
 import { T } from '../../../styles/theme.js'
 import { Badge } from '../../../components/Badge.jsx'
 import { RouteSteps } from './RouteSteps.jsx'
-import { copyToClipboard } from '../../../utils/clipboard.js'
-import { formatRouteText } from '../engine/buildRoute.js'
 
-function StartStepper({ start, onMinus, onPlus, onReset }) {
+const CREW_COLOR = {
+  '507': T.c507, '519': T.c519, '506': T.c506,
+  '516': T.cBP,  DUMP: T.cDump,
+}
+
+function crewColor(driver) {
+  return CREW_COLOR[driver.crew] || T.brand
+}
+
+function fallbackCopy(text) {
+  const el = document.createElement('textarea')
+  el.value = text
+  el.style.cssText = 'position:fixed;opacity:0'
+  document.body.appendChild(el)
+  el.focus()
+  el.select()
+  try { document.execCommand('copy') } catch (_) {}
+  document.body.removeChild(el)
+}
+
+function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text))
+  }
+  fallbackCopy(text)
+  return Promise.resolve()
+}
+
+function StartStepper({ name, start, isOverridden, onMinus, onPlus, onReset }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 2,
+      border: `1px solid ${isOverridden ? T.amber + '55' : T.border}`,
+      padding: '1px 6px', borderRadius: 99,
+      background: isOverridden ? `${T.amber}10` : 'transparent',
+    }}>
       <button
         onClick={(e) => { e.stopPropagation(); onMinus() }}
-        style={{
-          width: 22, height: 22, borderRadius: 4,
-          border: `1px solid ${T.border}`,
-          background: T.raised, color: T.text2,
-          fontSize: 14, lineHeight: '20px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}
-      >−</button>
-      <span
-        style={{
-          minWidth: 44, textAlign: 'center',
-          fontFamily: T.mono, fontSize: 12, color: T.text,
-        }}
-      >
-        {start}
-      </span>
+        style={{ background: 'none', border: 'none', color: T.text2, fontSize: 11, padding: '0 3px', fontFamily: T.font, cursor: 'pointer' }}
+      >-</button>
+      <span style={{
+        color: isOverridden ? T.amber : T.text2,
+        fontWeight: isOverridden ? 600 : 400,
+        fontFamily: T.mono, fontSize: 10, minWidth: 30, textAlign: 'center',
+      }}>{start}</span>
       <button
         onClick={(e) => { e.stopPropagation(); onPlus() }}
-        style={{
-          width: 22, height: 22, borderRadius: 4,
-          border: `1px solid ${T.border}`,
-          background: T.raised, color: T.text2,
-          fontSize: 14, lineHeight: '20px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}
+        style={{ background: 'none', border: 'none', color: T.text2, fontSize: 11, padding: '0 3px', fontFamily: T.font, cursor: 'pointer' }}
       >+</button>
-      <button
-        onClick={(e) => { e.stopPropagation(); onReset() }}
-        style={{
-          height: 22, padding: '0 6px', borderRadius: 4,
-          border: `1px solid ${T.border}`,
-          background: T.raised, color: T.text3,
-          fontSize: 10,
-        }}
-      >RST</button>
-    </div>
+      {isOverridden && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onReset() }}
+          style={{ background: 'none', border: `1px solid ${T.text4}`, color: T.text4, fontSize: 8, padding: '1px 6px', borderRadius: 99, fontFamily: T.font, cursor: 'pointer' }}
+        >RST</button>
+      )}
+    </span>
   )
 }
 
-export function DriverCard({ driver, steps, copied, onCopy, onAdjustStart, onResetStart }) {
+export function DriverCard({
+  driver, routeText, copied,
+  onCopy, onAdjustStart, onResetStart, isOverridden,
+}) {
+  const clr = crewColor(driver)
+  const isCopied = copied === driver.name
+
   async function handleClick() {
-    const text = formatRouteText(driver, steps)
-    await copyToClipboard(text)
+    await copyText(routeText)
     onCopy(driver.name)
   }
 
-  const crewColorMap = {
-    '507': T.c507, '519': T.c519, '506': T.c506, DUMP: T.cDump,
-  }
-  const crewColor = crewColorMap[driver.crew] || T.brand
+  // Alexis short day: two rounds separated by " / "
+  const isAlexis = driver.shortDay
+  const rounds = isAlexis ? routeText.split(' / ') : null
 
   return (
     <div
       onClick={handleClick}
       style={{
-        background: copied === driver.name ? 'rgba(91,166,110,0.08)' : T.surface,
-        border: `1px solid ${copied === driver.name ? T.green : T.border}`,
-        borderLeft: `3px solid ${crewColor}`,
+        background: T.surface,
+        border: `1px solid ${T.border}`,
+        borderLeft: `3px solid ${clr}`,
         borderRadius: T.r,
-        padding: '12px 14px',
-        cursor: 'pointer',
-        transition: 'all 0.15s',
-        position: 'relative',
+        boxShadow: T.shadow,
+        display: 'flex', flexDirection: 'column',
+        cursor: 'pointer', transition: 'all 0.15s ease',
+        position: 'relative', overflow: 'hidden',
       }}
     >
       {/* Copied overlay */}
-      {copied === driver.name && (
+      {isCopied && (
         <div style={{
-          position: 'absolute', top: 8, right: 12,
-          fontSize: 11, color: T.green, fontWeight: 600,
+          position: 'absolute', inset: 0,
+          background: 'rgba(91,166,110,0.06)',
+          borderRadius: T.r, pointerEvents: 'none', zIndex: 1,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          Copied
+          <span style={{
+            background: T.green, color: '#fff',
+            padding: '4px 16px', borderRadius: 99,
+            fontSize: 11, fontWeight: 600, letterSpacing: '0.5px',
+          }}>COPIED</span>
         </div>
       )}
 
-      {/* Header row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-        <span style={{ fontWeight: 700, fontSize: 14, color: T.text, flex: 1 }}>
-          {driver.name}
+      {/* Header */}
+      <div style={{
+        padding: '12px 14px 8px',
+        borderBottom: `1px solid ${T.divider}`,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+      }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 4 }}>
+            <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.5px', color: T.text }}>
+              {driver.name}
+            </span>
+            {driver.fixedBP && <Badge label="FIXED BP" color={T.c507} />}
+            {driver.fixed && <Badge label="FIXED" color={T.text3} />}
+            {driver.shortDay && <Badge label="2 ROUNDS" color={T.cBP} />}
+          </div>
+          <div style={{ fontSize: 9, color: T.text3, display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+            <span style={{ color: clr, fontWeight: 500 }}>{driver.crew} CREW</span>
+            <StartStepper
+              name={driver.name}
+              start={driver.start}
+              isOverridden={isOverridden}
+              onMinus={() => onAdjustStart(driver.name, -15)}
+              onPlus={() => onAdjustStart(driver.name, 15)}
+              onReset={() => onResetStart(driver.name)}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Route body */}
+      <div style={{ padding: '10px 14px', flex: 1 }}>
+        {isAlexis && rounds ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {rounds.map((line, i) => (
+              <div key={i} style={{ borderLeft: `2px solid ${i === 0 ? T.cBP : T.c519}`, paddingLeft: 10 }}>
+                <div style={{ fontSize: 9, color: i === 0 ? T.cBP : T.c519, fontWeight: 600, marginBottom: 4, letterSpacing: '0.5px' }}>
+                  {i === 0 ? 'ROUND 1' : 'ROUND 2'}
+                </div>
+                <RouteSteps text={line} driverClr={i === 0 ? T.cBP : T.c519} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <RouteSteps text={routeText} driverClr={clr} />
+        )}
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        padding: '8px 14px', borderTop: `1px solid ${T.divider}`,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      }}>
+        <span style={{ fontSize: 9, color: T.text4 }}>
+          {isCopied ? '✓ Copied to clipboard' : 'Tap to copy route'}
         </span>
-        <Badge variant="muted" style={{ color: crewColor }}>
-          {driver.crew}
-        </Badge>
-        {driver.fixed && <Badge variant="amber">FIXED</Badge>}
-        {driver.fixedBP && <Badge variant="brand">BP</Badge>}
-        {driver.shortDay && <Badge variant="blue">SHORT</Badge>}
-      </div>
-
-      {/* Start time stepper */}
-      <div style={{ marginBottom: 10 }}>
-        <StartStepper
-          start={driver.start}
-          onMinus={() => onAdjustStart(driver.name, -15)}
-          onPlus={() => onAdjustStart(driver.name, 15)}
-          onReset={() => onResetStart(driver.name)}
-        />
-      </div>
-
-      {/* Route steps */}
-      <RouteSteps steps={steps} />
-
-      <div style={{ marginTop: 8, fontSize: 10, color: T.text4 }}>
-        Click to copy route
+        <span style={{
+          fontSize: 8, color: isCopied ? T.green : T.text4,
+          background: isCopied ? `${T.green}15` : 'transparent',
+          padding: '2px 8px', borderRadius: 99,
+          border: `1px solid ${isCopied ? `${T.green}33` : 'transparent'}`,
+          fontWeight: isCopied ? 600 : 400, transition: 'all 0.2s ease',
+        }}>{isCopied ? 'SENT' : 'COPY'}</span>
       </div>
     </div>
   )

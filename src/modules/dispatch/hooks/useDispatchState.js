@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react'
 import { todayStr } from '../../../utils/date.js'
 import { readUrlState } from './useUrlState.js'
 import { ALL_DRIVERS } from '../../../tenants/srm-north-alabama/drivers.js'
+import { SUBS } from '../../../tenants/srm-north-alabama/plants.js'
+import { getCycleDay } from '../engine/rotation.js'
 import { buildAllRoutes } from '../engine/buildRoute.js'
 
 const initial = readUrlState()
@@ -32,9 +34,10 @@ export function useDispatchState() {
 
   // Build routes for all drivers
   const routes = useMemo(() => {
-    const opts = { tf, mhDay, swap519, curtisOffice, down, subOverride }
-    return buildAllRoutes(drivers, date, opts)
-  }, [drivers, date, tf, mhDay, swap519, curtisOffice, down, subOverride])
+    const cycleDay = getCycleDay(date)
+    const opts = { tf, mhDay, swap519, curtisOffice, down, subOverride, startOverrides, SUBS }
+    return buildAllRoutes(drivers, cycleDay, opts)
+  }, [drivers, date, tf, mhDay, swap519, curtisOffice, down, subOverride, startOverrides])
 
   // Filtered routes for current crew tab
   const filteredRoutes = useMemo(() => {
