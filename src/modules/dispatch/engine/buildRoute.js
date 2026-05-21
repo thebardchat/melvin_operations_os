@@ -5,7 +5,7 @@
 
 import {
   C507_NAMES, C519_NAMES, C506_NAMES,
-  BP_GROUPS,
+  BP_GROUPS, FIXED_BP,
   C507_ROTA, C506_ROTA,
   C519_TUE_PLANTS, C507_TUE_PLANTS,
   BP_FIRST_PLANTS,
@@ -69,43 +69,34 @@ function check518(down, subMap) {
 
 // ── main export ───────────────────────────────────────────────────────────────
 
-export function buildRoute(name, { tf, mhDay, down, subMap, curtisOffice, swap519, cycleDay, startOverrides }) {
-  const mh   = p('591', down, subMap)
+export function buildRoute(name, { tf, mhDay, down, subMap, curtisOffice, swap519, cycleDay, startOverrides, routeRole }) {
+  const mh    = p('591', down, subMap)
   const scMH  = `Scrap→${mh}`
   const sc594 = `Scrap→${p('594', down, subMap)}`
   const qry   = quarry(mhDay, down, subMap)
   const bpGroupKey = ['A', 'B', 'C'][cycleDay % 3]
-  const todayBP = new Set([...(BP_GROUPS[bpGroupKey] || []), 'Stacey', 'Alexis'])
+  const todayBP = new Set([...(BP_GROUPS[bpGroupKey] || []), ...FIXED_BP])
   const onBP  = todayBP.has(name)
 
-  // ── Fixed DUMP routes ──────────────────────────────────────────────────────
-  if (name === 'CHRIS P') return 'CHRIS P: CHER→MSAND→Tupelo Block→APAC Tremont→511→POD→519→PRELOAD'
-  if (name === 'Tim')     return `Tim: 519→${p('506', down, subMap)} delivery→POD check→PRELOAD 519`
+  // ── Fixed DUMP routes (keyed by routeRole) ────────────────────────────────
+  if (routeRole === 'dump-1') return `${name}: CHER→MSAND→Tupelo Block→APAC Tremont→511→POD→519→PRELOAD`
+  if (routeRole === 'dump-2') return `${name}: 519→${p('506', down, subMap)} delivery→POD check→PRELOAD 519`
 
-  // ── Fixed BP routes ────────────────────────────────────────────────────────
-  if (name === 'Stacey') {
+  // ── Fixed BP 1 (Stacey role) ───────────────────────────────────────────────
+  if (routeRole === 'stacey') {
     const firstRock = bpFirstRock(name, cycleDay, down, subMap)
-    return `Stacey: ${scMH} 67s→${firstRock} rock→${check518(down, subMap)}→502 BP 1/4 downs→907 blocks→511 Palmer→POD sand→home`
+    return `${name}: ${scMH} 67s→${firstRock} rock→${check518(down, subMap)}→502 BP 1/4 downs→907 blocks→511 Palmer→POD sand→home`
   }
 
-  if (name === 'Alexis') {
+  // ── Fixed BP 2 / short day (Alexis role) ──────────────────────────────────
+  if (routeRole === 'alexis') {
     const dest514 = p('514', down, subMap)
     const r1end = dest514 === '514'
       ? `→POD sand→${after514('516', down, subMap)}`
       : `→POD sand→${dest514}`
     const r1 = `R1: 516→RG 67s→${p('507', down, subMap)}→MM 67s→${p('513', down, subMap)}${r1end}`
     const r2 = `R2: 516→RG 67s→${p('507', down, subMap)}→MM 67s→${p('511', down, subMap)}→POD sand→516`
-    return `Alexis: ${r1} / ${r2}`
-  }
-
-  // ── Curtis (506/Decatur) ───────────────────────────────────────────────────
-  if (name === 'Curtis') {
-    if (curtisOffice) return 'Curtis: IN OFFICE — 525 needs coverage'
-    if (todayBP.has('Curtis')) {
-      const firstRock = bpFirstRock(name, cycleDay, down, subMap)
-      return `Curtis: ${scMH} 67s→${firstRock} rock→${check518(down, subMap)}→502 BP 1/4 downs→907 blocks→${p('594', down, subMap)} 67s→${p('506', down, subMap)} rock→POD sand→home`
-    }
-    return `Curtis: ${scMH} 67s→${p('525', down, subMap)} rock→home`
+    return `${name}: ${r1} / ${r2}`
   }
 
   // ── TUE/FRI overrides ─────────────────────────────────────────────────────
@@ -162,8 +153,8 @@ export function buildRoute(name, { tf, mhDay, down, subMap, curtisOffice, swap51
     const r1raw = C506_ROTA[(idx + cycleDay) % C506_ROTA.length]
     const r1 = p(r1raw, down, subMap)
 
-    if (name === 'Kenny') return `${name}: ${scMH} 67s→${r1} rock→POD sand→${p('519', down, subMap)} scrap→${qry} repeat`
-    if (name === 'Jimmy') return `${name}: ${scMH} 67s→${p('513', down, subMap)} rock→POD sand→${p('511', down, subMap)}→POD→511 repeat`
+    if (routeRole === 'kenny') return `${name}: ${scMH} 67s→${r1} rock→POD sand→${p('519', down, subMap)} scrap→${qry} repeat`
+    if (routeRole === 'jimmy') return `${name}: ${scMH} 67s→${p('513', down, subMap)} rock→POD sand→${p('511', down, subMap)}→POD→511 repeat`
 
     if (r1 === '514') return `${name}: ${scMH} 67s→${p('511', down, subMap)} rock→POD sand→${after514('506', down, subMap)}→506 home`
 
@@ -193,6 +184,6 @@ export function buildAllRoutes(drivers, cycleDay, opts) {
 
   return drivers.map(driver => ({
     driver,
-    routeText: buildRoute(driver.name, { tf, mhDay, down: downSet, subMap, curtisOffice, swap519, cycleDay, startOverrides }),
+    routeText: buildRoute(driver.name, { tf, mhDay, down: downSet, subMap, curtisOffice, swap519, cycleDay, startOverrides, routeRole: driver.routeRole }),
   }))
 }
