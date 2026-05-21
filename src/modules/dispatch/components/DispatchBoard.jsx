@@ -14,6 +14,7 @@ export function DispatchBoard() {
     down, toggleDown, view, setView,
     crew, setCrew, filteredRoutes, routes,
     copied, markCopied, adjustStart, resetStart,
+    startOverrides,
   } = state
 
   return (
@@ -50,11 +51,12 @@ export function DispatchBoard() {
             <DriverCard
               key={r.driver.name}
               driver={r.driver}
-              steps={r.steps}
+              routeText={r.routeText}
               copied={copied}
               onCopy={markCopied}
               onAdjustStart={adjustStart}
               onResetStart={resetStart}
+              isOverridden={!!startOverrides[r.driver.name]}
             />
           ))}
           {filteredRoutes.length === 0 && (

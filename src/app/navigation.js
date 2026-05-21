@@ -5,6 +5,7 @@ export const NAV_ITEMS = [
   { id: 'weather',    label: 'Weather',    icon: '🌤' },
   { id: 'management', label: 'Management', icon: '📌' },
   { id: 'health',     label: 'Health',     icon: '⚙' },
+  { id: 'stack',      label: 'Stack',      icon: '⬡' },
 ]
 
 export const DEFAULT_MODULE = 'dispatch'

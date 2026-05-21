@@ -7,6 +7,7 @@ import { RepairsPanel } from '../modules/repairs/RepairsPanel.jsx'
 import { WeatherPanel } from '../modules/weather/WeatherPanel.jsx'
 import { ManagementPanel } from '../modules/management/ManagementPanel.jsx'
 import { HealthPanel } from '../modules/health/HealthPanel.jsx'
+import { StackPanel } from '../modules/stack/StackPanel.jsx'
 import { useOnlineStatus } from '../modules/dispatch/hooks/useOnlineStatus.js'
 
 function NavItem({ item, active, onClick }) {
@@ -46,6 +47,7 @@ function renderModule(id) {
     case 'weather':    return <WeatherPanel />
     case 'management': return <ManagementPanel />
     case 'health':     return <HealthPanel />
+    case 'stack':      return <StackPanel />
     default:           return <div style={{ color: T.text3, padding: 40 }}>Module not found</div>
   }
 }
