@@ -23,7 +23,8 @@ export const C519_TUE_PLANTS = ['511', '506', '513', '507']
 export const C507_TUE_PLANTS = ['516', '514', '519', '513']
 export const BP_FIRST_PLANTS = ['506', '513', '511', '507']
 
-export const CONTACTS = { SHANE: '256-402-5176', ANTHONY: '256-924-4328' }
+// PUBLIC-SAFE: placeholders only — no real phone numbers in this repo.
+export const CONTACTS = { DISPATCH_LEAD: 'DISPATCH_LEAD_PHONE', PLANT_MANAGER: 'PLANT_MANAGER_PHONE' }
 
 export const ALL_DRIVERS = [
   // ── Fixed DUMP routes ──────────────────────────────────────────────────────

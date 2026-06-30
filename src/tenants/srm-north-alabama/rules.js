@@ -1,5 +1,18 @@
 // Business rules for SRM North Alabama dispatch
 
+// ── Concrete mixer dispatch / CSR operating rules (primary) ──────────────────
+export const CSR_RULES = [
+  'Confirm job is ready before large pours',
+  'Track will-calls visibly until released or canceled',
+  'Log all order changes — who, when, who approved',
+  'Complaints require a follow-up status until the customer is satisfied',
+  'Weather risk must appear on the Today Board',
+  'Carry unresolved issues to tomorrow — never drop a ball overnight',
+  'Every customer call gets a written record',
+]
+
+// ── Legacy dump dispatch rules (secondary, preserved) ────────────────────────
+
 // 514 chain rule: after first 514 load, follow with 516 then 519
 export const CHAIN_514 = ['514', '516', '519']
 
@@ -9,8 +22,8 @@ export const END_OF_SHIFT_BUFFER = 90
 // Quarry close time in minutes from midnight (16:00 = 960)
 export const QUARRY_CLOSE = 960
 
-// 518 requires a phone call to both Shane and Anthony before dispatching
-export const PLANT_518_CONTACTS = ['SHANE', 'ANTHONY']
+// 518 requires a phone call to the dispatch lead and plant manager before dispatching
+export const PLANT_518_CONTACTS = ['DISPATCH_LEAD', 'PLANT_MANAGER']
 
 // Mh (Mt. Hope 591) vs Cherokee (594) toggle — controlled by mhDay state
 export const MH_PLANT = '591'

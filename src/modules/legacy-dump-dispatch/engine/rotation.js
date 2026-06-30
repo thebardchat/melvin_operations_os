@@ -61,6 +61,25 @@ export function rotaAssign(crewNames, rotaArray, dateStr) {
 }
 
 /**
+ * Is the given date a Saturday or Sunday?
+ */
+export function isWeekend(dateStr) {
+  const day = new Date(dateStr + 'T00:00:00').getDay()
+  return day === 0 || day === 6
+}
+
+/**
+ * Advance to the next weekday (Mon–Fri) in the given direction (+1 / -1).
+ */
+export function nextWeekday(dateStr, direction = 1) {
+  const d = new Date(dateStr + 'T00:00:00')
+  do {
+    d.setDate(d.getDate() + (direction >= 0 ? 1 : -1))
+  } while (isWeekend(d.toISOString().split('T')[0]))
+  return d.toISOString().split('T')[0]
+}
+
+/**
  * Is the given date a Tuesday or Friday?
  */
 export function isTueFri(dateStr) {

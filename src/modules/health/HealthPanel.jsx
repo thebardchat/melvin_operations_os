@@ -2,7 +2,7 @@ import { T } from '../../styles/theme.js'
 import { SectionHeader } from '../../components/SectionHeader.jsx'
 import { StatCard } from '../../components/StatCard.jsx'
 import { Badge } from '../../components/Badge.jsx'
-import { useOnlineStatus } from '../dispatch/hooks/useOnlineStatus.js'
+import { useOnlineStatus } from '../legacy-dump-dispatch/hooks/useOnlineStatus.js'
 
 const APP_VERSION = '0.1.0'
 

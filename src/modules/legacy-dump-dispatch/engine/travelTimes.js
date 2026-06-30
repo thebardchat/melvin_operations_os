@@ -62,3 +62,25 @@ export function minToTime(minutes) {
   const m = minutes % 60
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
 }
+
+// Spec-named aliases / helpers ────────────────────────────────────────────────
+export const timeToMinutes = timeToMin
+export const minutesToTime = minToTime
+
+/**
+ * Add a delta (minutes) to a "HH:MM" time string.
+ */
+export function addMinutes(timeStr, delta) {
+  return minToTime(timeToMin(timeStr) + delta)
+}
+
+/**
+ * Estimate total minutes for an ordered list of plant-code stops.
+ */
+export function estimateRouteTime(stops = []) {
+  let total = 0
+  for (let i = 1; i < stops.length; i++) {
+    total += getDriveTime(stops[i - 1], stops[i]) + LOAD_TIME
+  }
+  return total
+}
