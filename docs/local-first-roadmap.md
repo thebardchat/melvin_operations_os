@@ -1,24 +1,48 @@
 # Melvin Local-First Roadmap
 
-## Phase 1 — Current MVP (Browser-Only)
+## Service map (future)
+
+The MVP is a single web app (`melvin-web`). The local-first platform grows into
+these optional services, all running on the Pi 5 / local hardware:
+
+- `melvin-web` — this Vite + React front end (the MVP)
+- `melvin-api` — FastAPI backend for persistence and sync
+- `melvin-worker` — background scheduled tasks (systemd timer)
+- `melvin-mcp` — MCP server exposing Melvin tools to Claude Code
+- `melvin-agents` — agent orchestration
+- `melvin-briefing` — push/TTS/log the daily briefing
+- `melvin-backup` — local backup/export
+- `melvin-health` — service health monitoring
+
+Optional infra introduced over time: Ollama (local LLM), Weaviate (semantic
+memory), MCP, FastAPI, systemd services, and a backup/export system. None are
+required for the MVP.
+
+---
+
+## Phase 1 — Current MVP (Browser-Only) — `melvin-web`
 
 **Status:** In progress  
-**Stack:** Vite + React, browser localStorage, no backend
+**Stack:** Vite + React, browser localStorage (seed data first), no backend
 
 - [x] Vite React app scaffolded
-- [x] SRM North Alabama tenant data
-- [x] Dispatch board with full route engine
-- [x] BP rotation calendar
-- [x] Audible view (copy all routes)
-- [x] Morning briefing generator
-- [x] Repairs tracker (seed data)
+- [x] SRM North Alabama tenant data (public-safe placeholders)
+- [x] **Today Board (default view)** — CSR command board
+- [x] Customer Calls log (sample data)
+- [x] Callback Queue
+- [x] Order Change tracker
+- [x] Mixer Dispatch board
+- [x] Issues / Complaints log
 - [x] Weather panel (seed data)
-- [x] Management / SOPs panel
+- [x] Briefing generator (morning / end-of-day / weekly)
+- [x] Repairs tracker (seed data)
+- [x] Management / SOPs / CSR scripts panel
 - [x] System health panel
-- [ ] localStorage persistence for dispatch state
-- [ ] localStorage persistence for repair records
+- [x] Settings / Data panel
+- [x] Legacy Dump Dispatch module (route engine preserved)
+- [ ] localStorage persistence for CSR records (calls, callbacks, orders, issues)
+- [ ] Call / order / issue entry forms
 - [ ] PWA manifest + service worker (offline capable)
-- [ ] URL state sync (date, tf, down, etc.)
 
 ---
 

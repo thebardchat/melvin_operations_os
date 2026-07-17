@@ -1,14 +1,27 @@
 import { useState } from 'react'
 import { T } from '../../styles/theme.js'
 import { SectionHeader } from '../../components/SectionHeader.jsx'
-import { buildMorningBriefing } from './buildMorningBriefing.js'
+import { Pill } from '../../components/Pill.jsx'
+import { buildMorningBriefing, buildEndOfDayCloseout, buildWeeklyReport } from './buildMorningBriefing.js'
 import { copyToClipboard } from '../../utils/clipboard.js'
 import { todayStr } from '../../utils/date.js'
 
+const VIEWS = [
+  { id: 'morning', label: 'Morning' },
+  { id: 'eod', label: 'End of Day' },
+  { id: 'weekly', label: 'Weekly' },
+]
+
 export function BriefingPanel() {
   const [date, setDate] = useState(todayStr())
+  const [view, setView] = useState('morning')
   const [copied, setCopied] = useState(false)
-  const text = buildMorningBriefing(date)
+
+  const text = view === 'morning'
+    ? buildMorningBriefing(date)
+    : view === 'eod'
+      ? buildEndOfDayCloseout(date)
+      : buildWeeklyReport()
 
   async function handleCopy() {
     await copyToClipboard(text)
@@ -19,8 +32,8 @@ export function BriefingPanel() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <SectionHeader
-        title="Morning Briefing"
-        subtitle="Auto-generated daily briefing for SRM North Alabama"
+        title="Briefing"
+        subtitle="Plain-text briefing — copy, push, or TTS (SRM North Alabama)"
         action={
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <input
@@ -39,25 +52,18 @@ export function BriefingPanel() {
                 cursor: 'pointer',
               }}
             >
-              {copied ? 'Copied!' : 'Copy Briefing'}
+              {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
         }
       />
-      <div style={{
-        background: T.surface,
-        border: `1px solid ${T.border}`,
-        borderRadius: T.r,
-        padding: 20,
-      }}>
-        <pre style={{
-          fontFamily: T.mono,
-          fontSize: 12,
-          color: T.text,
-          whiteSpace: 'pre-wrap',
-          lineHeight: 1.7,
-          margin: 0,
-        }}>
+
+      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        {VIEWS.map(v => <Pill key={v.id} active={view === v.id} onClick={() => setView(v.id)}>{v.label}</Pill>)}
+      </div>
+
+      <div style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: T.r, padding: 20 }}>
+        <pre style={{ fontFamily: T.mono, fontSize: 12, color: T.text, whiteSpace: 'pre-wrap', lineHeight: 1.7, margin: 0 }}>
           {text}
         </pre>
       </div>

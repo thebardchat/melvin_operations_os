@@ -64,7 +64,7 @@ function bpFirstRock(name, cycleDay, down, subMap) {
 
 // 518 call/check line
 function check518(down, subMap) {
-  return `📞 518: Shane ${CONTACTS.SHANE} / Anthony ${CONTACTS.ANTHONY}→MM 78s→${p('518', down, subMap)} or DH`
+  return `📞 518: Dispatch Lead ${CONTACTS.DISPATCH_LEAD} / Plant Mgr ${CONTACTS.PLANT_MANAGER}→MM 78s→${p('518', down, subMap)} or DH`
 }
 
 // ── main export ───────────────────────────────────────────────────────────────

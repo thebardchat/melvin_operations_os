@@ -29,6 +29,31 @@ All will use `text2vec-transformers` with MiniLM-L6-v2 for semantic search.
 **Fields:** date, shiftType (AM/PM), note, author, driverRefs, plantRefs, createdAt  
 **Use:** Shift handoff, historical review, pattern detection
 
+### MelvinCustomerCall
+**Purpose:** Customer Service Representative call log (primary CSR record)  
+**Fields:** time, customerName, company, phone, jobName, jobAddress, orderNumber, topic, requestType, urgency, status, assignedTo, notes, followUpTime, resolvedAt  
+**Use:** Written record of every call, follow-up tracking, complaint trails
+
+### MelvinOrderChange
+**Purpose:** Order change tracker — who changed what, when, who approved  
+**Fields:** orderNumber, customerName, jobName, originalTime, newTime, originalYards, newYards, mixDesign, slump, spacing, requestedBy, approvedBy, changeReason, status, timestamp, notes  
+**Use:** Protect the office, audit order changes, prove notification chain
+
+### MelvinMixerStatus
+**Purpose:** Live and historical mixer truck status  
+**Fields:** truckNumber, driverName, currentOrder, nextOrder, plant, loadStatus, ticketNumber, yards, mixDesign, slump, jobAddress, eta, delayReason, notes, updatedAt  
+**Use:** Dispatch board state, utilization, delay analysis
+
+### MelvinIssue
+**Purpose:** Complaints and operational issues  
+**Fields:** date, customerName, jobName, orderNumber, issueType, severity, description, immediateAction, whoWasNotified, followUpNeeded, followUpDate, status, resolution  
+**Use:** Complaint resolution, follow-up enforcement, recurring-problem detection
+
+### MelvinCallback
+**Purpose:** Callback queue — keep follow-ups visible  
+**Fields:** dueTime, customerName, company, phone, reason, relatedOrderNumber, status, notes, completedAt  
+**Use:** Never drop a callback, due/overdue tracking
+
 ### MelvinDispatchRecord
 **Purpose:** Audit log of every dispatched route  
 **Fields:** date, driverName, crew, plant, steps (JSON), startTime, opts (JSON), createdAt  

@@ -1,14 +1,21 @@
 import { useState } from 'react'
 import { T } from '../styles/theme.js'
 import { NAV_ITEMS, DEFAULT_MODULE } from './navigation.js'
-import { DispatchBoard } from '../modules/dispatch/components/DispatchBoard.jsx'
+import { TodayBoard } from '../modules/today/TodayBoard.jsx'
+import { CustomerCallsPanel } from '../modules/customer-service/CustomerCallsPanel.jsx'
+import { CallbackQueue } from '../modules/customer-service/CallbackQueue.jsx'
+import { OrderChangesPanel } from '../modules/orders/OrderChangesPanel.jsx'
+import { MixerDispatchBoard } from '../modules/mixer-dispatch/MixerDispatchBoard.jsx'
+import { IssuesPanel } from '../modules/issues/IssuesPanel.jsx'
 import { BriefingPanel } from '../modules/briefing/BriefingPanel.jsx'
 import { RepairsPanel } from '../modules/repairs/RepairsPanel.jsx'
 import { WeatherPanel } from '../modules/weather/WeatherPanel.jsx'
 import { ManagementPanel } from '../modules/management/ManagementPanel.jsx'
 import { HealthPanel } from '../modules/health/HealthPanel.jsx'
+import { SettingsPanel } from '../modules/settings/SettingsPanel.jsx'
 import { StackPanel } from '../modules/stack/StackPanel.jsx'
-import { useOnlineStatus } from '../modules/dispatch/hooks/useOnlineStatus.js'
+import { DispatchBoard } from '../modules/legacy-dump-dispatch/components/DispatchBoard.jsx'
+import { useOnlineStatus } from '../modules/legacy-dump-dispatch/hooks/useOnlineStatus.js'
 
 function NavItem({ item, active, onClick }) {
   return (
@@ -41,12 +48,19 @@ function NavItem({ item, active, onClick }) {
 
 function renderModule(id) {
   switch (id) {
-    case 'dispatch':   return <DispatchBoard />
+    case 'today':      return <TodayBoard />
+    case 'calls':      return <CustomerCallsPanel />
+    case 'orders':     return <OrderChangesPanel />
+    case 'mixer':      return <MixerDispatchBoard />
+    case 'issues':     return <IssuesPanel />
+    case 'callbacks':  return <CallbackQueue />
     case 'briefing':   return <BriefingPanel />
     case 'repairs':    return <RepairsPanel />
     case 'weather':    return <WeatherPanel />
     case 'management': return <ManagementPanel />
     case 'health':     return <HealthPanel />
+    case 'settings':   return <SettingsPanel />
+    case 'legacy':     return <DispatchBoard />
     case 'stack':      return <StackPanel />
     default:           return <div style={{ color: T.text3, padding: 40 }}>Module not found</div>
   }
@@ -89,7 +103,7 @@ export function MelvinShell() {
         </div>
 
         {/* Nav items */}
-        <div style={{ flex: 1, paddingTop: 8 }}>
+        <div style={{ flex: 1, paddingTop: 8, overflowY: 'auto', overflowX: 'hidden' }}>
           {NAV_ITEMS.map(item => (
             <NavItem
               key={item.id}
