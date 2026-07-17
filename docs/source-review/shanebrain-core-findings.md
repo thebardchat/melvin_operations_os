@@ -58,4 +58,27 @@ The following structural and architectural patterns were identified and informed
 - Secrets, tokens, vault contents
 - Private infrastructure details (IPs, login names, SSH configs)
 - Personal/family data
+
+## Sensitive Data Found & Sanitized in This Repo
+
+During this build, real personal phone numbers (a dispatch lead's and a plant
+manager's mobile numbers) were found hardcoded in several existing files:
+
+- `src/tenants/srm-north-alabama/contacts.js`
+- `src/tenants/srm-north-alabama/drivers.js` (CONTACTS export)
+- `src/modules/briefing/buildMorningBriefing.js`
+- `src/modules/management/sops.js`
+- `src/modules/legacy-dump-dispatch/engine/buildRoute.js` (518 call/check line)
+
+All were replaced with placeholder tokens (`DISPATCH_OFFICE_PHONE`,
+`CUSTOMER_SERVICE_PHONE`, `PLANT_MANAGER_PHONE`, `DISPATCH_LEAD_PHONE`). Real
+values belong in a local, untracked config — never in this public repo. No
+other secrets, tokens, or credentials were found or committed.
+
+## Product Direction Decision (this session)
+
+Per the updated `CLAUDE.md`, the product shifted from dump-truck dispatch to
+**Concrete Mixer Dispatch + Customer Service**. The Today Board is now the
+default view; the original dump-dispatch route engine is preserved intact as the
+secondary **Legacy Dump Dispatch** module (`src/modules/legacy-dump-dispatch/`).
 - Discord webhook URLs, Gmail credentials

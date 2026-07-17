@@ -1,0 +1,175 @@
+// Mixer Dispatch Board model — live status of each mixer truck.
+
+export const MIXER_STATUSES = [
+  'Available',
+  'Loading',
+  'Loaded',
+  'On the way',
+  'On job',
+  'Pouring',
+  'Returning',
+  'Washing out',
+  'Down',
+  'Lunch',
+  'Off duty',
+]
+
+export const MIXER_STATUS_VARIANT = {
+  Available: 'green',
+  Loading: 'blue',
+  Loaded: 'blue',
+  'On the way': 'blue',
+  'On job': 'brand',
+  Pouring: 'brand',
+  Returning: 'amber',
+  'Washing out': 'amber',
+  Down: 'red',
+  Lunch: 'muted',
+  'Off duty': 'muted',
+}
+
+// Statuses that mean the truck is working a job/order right now.
+const ACTIVE_STATES = new Set(['Loading', 'Loaded', 'On the way', 'On job', 'Pouring', 'Returning', 'Washing out'])
+
+export function isMixerAvailable(m) {
+  return m.loadStatus === 'Available'
+}
+export function isMixerDown(m) {
+  return m.loadStatus === 'Down'
+}
+export function isMixerActive(m) {
+  return ACTIVE_STATES.has(m.loadStatus)
+}
+
+export function newMixerStatus(overrides = {}) {
+  return {
+    id: '',
+    truckNumber: '',
+    driverName: '',
+    currentOrder: '',
+    nextOrder: '',
+    plant: '',
+    loadStatus: 'Available',
+    ticketNumber: '',
+    yards: '',
+    mixDesign: '',
+    slump: '',
+    jobAddress: '',
+    eta: '',
+    delayReason: '',
+    notes: '',
+    updatedAt: '',
+    ...overrides,
+  }
+}
+
+export const SEED_MIXER_STATUS = [
+  {
+    id: 'ms-001',
+    truckNumber: 'Mixer 001',
+    driverName: 'Driver 01',
+    currentOrder: '',
+    nextOrder: 'SO-10241',
+    plant: '506 Decatur',
+    loadStatus: 'Available',
+    ticketNumber: '',
+    yards: '',
+    mixDesign: '',
+    slump: '',
+    jobAddress: '',
+    eta: '',
+    delayReason: '',
+    notes: 'Ready for next assignment.',
+    updatedAt: '07:30',
+  },
+  {
+    id: 'ms-002',
+    truckNumber: 'Mixer 002',
+    driverName: 'Driver 02',
+    currentOrder: 'SO-10244',
+    nextOrder: '',
+    plant: '506 Decatur',
+    loadStatus: 'Loading',
+    ticketNumber: 'T-88231',
+    yards: '10',
+    mixDesign: '5000 PSI',
+    slump: '4',
+    jobAddress: 'Industrial Pad B',
+    eta: '08:05',
+    delayReason: '',
+    notes: 'Add-on load for short pour.',
+    updatedAt: '07:52',
+  },
+  {
+    id: 'ms-003',
+    truckNumber: 'Mixer 003',
+    driverName: 'Driver 03',
+    currentOrder: 'SO-10240',
+    nextOrder: '',
+    plant: '507 Stringfield',
+    loadStatus: 'On job',
+    ticketNumber: 'T-88224',
+    yards: '9',
+    mixDesign: '3000 PSI',
+    slump: '5',
+    jobAddress: 'Cedar Crossing Slab',
+    eta: 'On site',
+    delayReason: '',
+    notes: 'Pouring now.',
+    updatedAt: '07:40',
+  },
+  {
+    id: 'ms-004',
+    truckNumber: 'Mixer 004',
+    driverName: 'Unassigned',
+    currentOrder: '',
+    nextOrder: '',
+    plant: '506 Decatur',
+    loadStatus: 'Down',
+    ticketNumber: '',
+    yards: '',
+    mixDesign: '',
+    slump: '',
+    jobAddress: '',
+    eta: '',
+    delayReason: 'Hydraulic leak — in shop',
+    notes: 'Out of service. See Repairs.',
+    updatedAt: '06:15',
+  },
+  {
+    id: 'ms-005',
+    truckNumber: 'Mixer 005',
+    driverName: 'Driver 05',
+    currentOrder: 'SO-10236',
+    nextOrder: 'SO-10242',
+    plant: '513 Greenbrier',
+    loadStatus: 'Returning',
+    ticketNumber: 'T-88219',
+    yards: '0',
+    mixDesign: '4000 PSI',
+    slump: '5',
+    jobAddress: 'Brookhaven Footings',
+    eta: '08:00',
+    delayReason: '',
+    notes: 'Washed out, heading back for reload.',
+    updatedAt: '07:48',
+  },
+  {
+    id: 'ms-006',
+    truckNumber: 'Mixer 006',
+    driverName: 'Driver 06',
+    currentOrder: 'SO-10243',
+    nextOrder: '',
+    plant: '511 Palmer',
+    loadStatus: 'On the way',
+    ticketNumber: 'T-88230',
+    yards: '8',
+    mixDesign: '4000 PSI',
+    slump: '4',
+    jobAddress: 'Palmer Commons',
+    eta: '08:12',
+    delayReason: 'Traffic on US-72',
+    notes: 'Running ~10 min late — customer notified.',
+    updatedAt: '07:55',
+  },
+]

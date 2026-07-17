@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { T } from '../../styles/theme.js'
 import { SectionHeader } from '../../components/SectionHeader.jsx'
 import { Badge } from '../../components/Badge.jsx'
-import { MISSION, VALUES, MANTRA, SOPS, SOP_CATEGORIES } from './sops.js'
+import { MISSION, VALUES, MANTRA, MOTTO, SOPS, SOP_CATEGORIES, SCRIPTS } from './sops.js'
 
 export function ManagementPanel() {
   const [activeCategory, setActiveCategory] = useState('All')
@@ -48,6 +48,9 @@ export function ManagementPanel() {
           fontStyle: 'italic', fontSize: 14, color: T.brand,
         }}>
           "{MANTRA}"
+        </div>
+        <div style={{ marginTop: 8, fontSize: 12, color: T.text3 }}>
+          Internal motto: <span style={{ color: T.brand, fontWeight: 600 }}>{MOTTO}</span>
         </div>
       </div>
 
@@ -124,6 +127,31 @@ export function ManagementPanel() {
             )}
           </div>
         ))}
+      </div>
+
+      {/* Customer service scripts */}
+      <SectionHeader
+        title="Customer Service Scripts"
+        subtitle="Calm, documented, professional — handle the hard calls"
+      />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {SCRIPTS.map(s => (
+          <div key={s.id} style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: T.r, padding: '12px 16px' }}>
+            <div style={{ fontWeight: 600, fontSize: 13, color: T.text, marginBottom: 6 }}>{s.title}</div>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 5 }}>
+              {s.body.map((line, i) => (
+                <li key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                  <span style={{ color: T.brand, marginTop: 1 }}>›</span>
+                  <span style={{ fontSize: 12.5, color: T.text2, lineHeight: 1.5 }}>{line}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ fontSize: 11, color: T.text4 }}>
+        Scaffold: SOPs, scripts, and checklists. Phase 2 adds personnel notes and training notes.
       </div>
     </div>
   )
