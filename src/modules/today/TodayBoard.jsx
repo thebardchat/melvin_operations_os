@@ -8,6 +8,8 @@ import { formatDate, todayStr } from '../../utils/date.js'
 import { usePersistentList } from '../../hooks/usePersistentList.js'
 import { SEED_CALLS } from '../customer-service/customerCallModel.js'
 import { SEED_CALLBACKS } from '../customer-service/callbackModel.js'
+import { SEED_ORDER_CHANGES } from '../orders/orderChangeModel.js'
+import { SEED_ISSUES } from '../issues/issueModel.js'
 import { buildTodaySnapshot, buildTopPriorities } from './todayModel.js'
 import { RISK_SEVERITY_VARIANT } from './riskFlags.js'
 
@@ -40,7 +42,9 @@ function Row({ left, right, sub }) {
 export function TodayBoard() {
   const [calls] = usePersistentList('customer_calls', SEED_CALLS)
   const [callbacks] = usePersistentList('callbacks', SEED_CALLBACKS)
-  const snap = useMemo(() => buildTodaySnapshot({ calls, callbacks }), [calls, callbacks])
+  const [orderChanges] = usePersistentList('order_changes', SEED_ORDER_CHANGES)
+  const [issues] = usePersistentList('issues', SEED_ISSUES)
+  const snap = useMemo(() => buildTodaySnapshot({ calls, callbacks, orderChanges, issues }), [calls, callbacks, orderChanges, issues])
   const priorities = useMemo(() => buildTopPriorities(snap), [snap])
   const today = todayStr()
   const weatherVariant = { low: 'green', medium: 'amber', high: 'red' }

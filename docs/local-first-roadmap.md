@@ -30,9 +30,9 @@ required for the MVP.
 - [x] **Today Board (default view)** — CSR command board
 - [x] Customer Calls log (local entry + browser persistence)
 - [x] Callback Queue (local entry/complete + browser persistence)
-- [x] Order Change tracker
+- [x] Order Change tracker (local entry/status + browser persistence)
 - [x] Mixer Dispatch board
-- [x] Issues / Complaints log
+- [x] Issues / Complaints log (local entry/resolve + browser persistence)
 - [x] Weather panel (seed data)
 - [x] Briefing generator (morning / end-of-day / weekly)
 - [x] Repairs tracker (seed data)
@@ -40,9 +40,8 @@ required for the MVP.
 - [x] System health panel
 - [x] Settings / Data panel
 - [x] Legacy Dump Dispatch module (route engine preserved)
-- [ ] localStorage persistence for order changes and issues
-- [ ] Order / issue entry forms
 - [ ] PWA manifest + service worker (offline capable)
+- [ ] Export / backup for browser-local records
 
 ---
 
