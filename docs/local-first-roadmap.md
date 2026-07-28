@@ -23,16 +23,16 @@ required for the MVP.
 ## Phase 1 — Current MVP (Browser-Only) — `melvin-web`
 
 **Status:** In progress  
-**Stack:** Vite + React, browser localStorage (seed data first), no backend
+**Stack:** Vite + React, browser localStorage, no backend
 
 - [x] Vite React app scaffolded
 - [x] SRM North Alabama tenant data (public-safe placeholders)
 - [x] **Today Board (default view)** — CSR command board
-- [x] Customer Calls log (sample data)
-- [x] Callback Queue
-- [x] Order Change tracker
+- [x] Customer Calls log (local entry + browser persistence)
+- [x] Callback Queue (local entry/complete + browser persistence)
+- [x] Order Change tracker (local entry/status + browser persistence)
 - [x] Mixer Dispatch board
-- [x] Issues / Complaints log
+- [x] Issues / Complaints log (local entry/resolve + browser persistence)
 - [x] Weather panel (seed data)
 - [x] Briefing generator (morning / end-of-day / weekly)
 - [x] Repairs tracker (seed data)
@@ -40,9 +40,8 @@ required for the MVP.
 - [x] System health panel
 - [x] Settings / Data panel
 - [x] Legacy Dump Dispatch module (route engine preserved)
-- [ ] localStorage persistence for CSR records (calls, callbacks, orders, issues)
-- [ ] Call / order / issue entry forms
 - [ ] PWA manifest + service worker (offline capable)
+- [ ] Export / backup for browser-local records
 
 ---
 

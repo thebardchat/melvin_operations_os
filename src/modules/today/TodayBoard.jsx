@@ -5,6 +5,11 @@ import { StatCard } from '../../components/StatCard.jsx'
 import { Badge } from '../../components/Badge.jsx'
 import { EmptyState } from '../../components/EmptyState.jsx'
 import { formatDate, todayStr } from '../../utils/date.js'
+import { usePersistentList } from '../../hooks/usePersistentList.js'
+import { SEED_CALLS } from '../customer-service/customerCallModel.js'
+import { SEED_CALLBACKS } from '../customer-service/callbackModel.js'
+import { SEED_ORDER_CHANGES } from '../orders/orderChangeModel.js'
+import { SEED_ISSUES } from '../issues/issueModel.js'
 import { buildTodaySnapshot, buildTopPriorities } from './todayModel.js'
 import { RISK_SEVERITY_VARIANT } from './riskFlags.js'
 
@@ -35,7 +40,11 @@ function Row({ left, right, sub }) {
 }
 
 export function TodayBoard() {
-  const snap = useMemo(() => buildTodaySnapshot(), [])
+  const [calls] = usePersistentList('customer_calls', SEED_CALLS)
+  const [callbacks] = usePersistentList('callbacks', SEED_CALLBACKS)
+  const [orderChanges] = usePersistentList('order_changes', SEED_ORDER_CHANGES)
+  const [issues] = usePersistentList('issues', SEED_ISSUES)
+  const snap = useMemo(() => buildTodaySnapshot({ calls, callbacks, orderChanges, issues }), [calls, callbacks, orderChanges, issues])
   const priorities = useMemo(() => buildTopPriorities(snap), [snap])
   const today = todayStr()
   const weatherVariant = { low: 'green', medium: 'amber', high: 'red' }
@@ -44,7 +53,7 @@ export function TodayBoard() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <SectionHeader
         title="Today Board"
-        subtitle={`${formatDate(today)} · SRM North Alabama · Pedal to the Medal`}
+        subtitle={`${formatDate(today)} · SRM North Alabama · local records included`}
         action={
           <Badge variant={weatherVariant[snap.weather.dispatchRisk]}>
             WEATHER: {String(snap.weather.dispatchRisk).toUpperCase()} RISK
@@ -52,19 +61,17 @@ export function TodayBoard() {
         }
       />
 
-      {/* Stat strip */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10 }}>
-        <StatCard label="Open Calls" value={snap.stats.openCalls} icon="📞" color={T.amber} />
-        <StatCard label="Callbacks Due" value={snap.stats.callbacksDue} icon="↩" color={snap.stats.callbacksOverdue ? T.red : T.blue} />
-        <StatCard label="Overdue" value={snap.stats.callbacksOverdue} icon="⏰" color={snap.stats.callbacksOverdue ? T.red : T.text3} />
-        <StatCard label="Order Changes" value={snap.stats.openOrderChanges} icon="✎" color={T.blue} />
-        <StatCard label="Open Issues" value={snap.stats.openIssues} icon="⚠" color={snap.stats.openIssues ? T.red : T.green} />
-        <StatCard label="Mixers Avail." value={snap.stats.mixersAvailable} icon="🟢" color={T.green} />
-        <StatCard label="Mixers Down" value={snap.stats.mixersDown} icon="🔴" color={snap.stats.mixersDown ? T.red : T.text3} />
-        <StatCard label="At-Risk Pours" value={snap.stats.atRiskPours} icon="🧱" color={snap.stats.atRiskPours ? T.amber : T.green} />
+        <StatCard label="Open Calls" value={snap.stats.openCalls} icon="Calls" color={T.amber} />
+        <StatCard label="Callbacks Due" value={snap.stats.callbacksDue} icon="Due" color={snap.stats.callbacksOverdue ? T.red : T.blue} />
+        <StatCard label="Overdue" value={snap.stats.callbacksOverdue} icon="Late" color={snap.stats.callbacksOverdue ? T.red : T.text3} />
+        <StatCard label="Order Changes" value={snap.stats.openOrderChanges} icon="Edit" color={T.blue} />
+        <StatCard label="Open Issues" value={snap.stats.openIssues} icon="Risk" color={snap.stats.openIssues ? T.red : T.green} />
+        <StatCard label="Mixers Avail." value={snap.stats.mixersAvailable} icon="Avail" color={T.green} />
+        <StatCard label="Mixers Down" value={snap.stats.mixersDown} icon="Down" color={snap.stats.mixersDown ? T.red : T.text3} />
+        <StatCard label="At-Risk Pours" value={snap.stats.atRiskPours} icon="Pours" color={snap.stats.atRiskPours ? T.amber : T.green} />
       </div>
 
-      {/* Risk flags */}
       <Card title="Risk Flags" count={snap.riskFlags.length}>
         {snap.riskFlags.length === 0 ? (
           <div style={{ fontSize: 12, color: T.text3 }}>No active risk flags. Stay sharp.</div>
@@ -77,10 +84,9 @@ export function TodayBoard() {
         )}
       </Card>
 
-      {/* Top priorities */}
       <Card title="Top Priorities" count={priorities.length}>
         {priorities.length === 0 ? (
-          <EmptyState icon="✓" title="All clear" hint="No high-priority items right now." />
+          <EmptyState icon="Done" title="All clear" hint="No high-priority items right now." />
         ) : (
           priorities.map((p, i) => (
             <Row
@@ -92,7 +98,6 @@ export function TodayBoard() {
         )}
       </Card>
 
-      {/* Two-column grid of streams */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 12 }}>
         <Card title="Who Called" count={snap.openCalls.length} accent={T.amber}>
           {snap.openCalls.length === 0
@@ -142,7 +147,7 @@ export function TodayBoard() {
           {snap.atRiskPours.length === 0
             ? <div style={{ fontSize: 12, color: T.text3 }}>No pours flagged at risk.</div>
             : snap.atRiskPours.map((p, i) => (
-                <Row key={i} left={`${p.orderNumber || '—'} · ${p.job}`} sub={p.why} />
+                <Row key={i} left={`${p.orderNumber || '-'} · ${p.job}`} sub={p.why} />
               ))}
         </Card>
 
