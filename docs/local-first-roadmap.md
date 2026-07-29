@@ -45,7 +45,7 @@ Optional infrastructure later: SQLite, local file backup, Ollama, Weaviate, MCP,
 - [x] Settings / Data panel
 - [x] Legacy Dump Dispatch module preserved as reference
 - [x] Public privacy rules documented in `PRIVACY.md`
-- [ ] Export / backup for browser-local records
+- [x] Export / import / clear controls for browser-local records
 - [ ] PWA manifest + service worker
 - [ ] Mixer status update controls
 - [ ] End-of-day carry-forward into next-day Today Board
