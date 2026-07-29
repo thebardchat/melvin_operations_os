@@ -6,3 +6,36 @@ dist/
 *.log
 .DS_Store
 .vite/
+
+# Private SRM / dispatch data - never commit to this public repo
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+*.tsv
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.heic
+*.webp
+*.mov
+*.mp4
+*roster*
+*schedule*
+*dispatch*
+*driver*
+*customer*
+*contact*
+*phone*
+*pod*
+*ticket*
+*order*
+*invoice*
+*statement*
+*timesheet*
+*workbook*
+*screenshot*
+
+# Keep source-controlled public-safe sample code/docs explicit
+!src/tenants/srm-north-alabama/customers.sample.js

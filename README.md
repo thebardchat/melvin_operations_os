@@ -1,32 +1,24 @@
 # Melvin Operations OS
 
-**Concrete Mixer Dispatch + Customer Service Command Center.**
+**Concrete mixer dispatch + CSR command center.**
 
-A local-first, in-house command center for a concrete dispatch office. Melvin
-consolidates dispatch, customer service, repairs, weather, briefings, and SOPs
-into one clean, extensible platform — starting with SRM Concrete / North Alabama.
+Melvin is a local-first operations tool for concrete mixer dispatch, customer service, follow-ups, repairs, weather, briefings, and SOPs. The public repo contains product code and sample data only. Real SRM data belongs in local/private storage or approved company systems.
 
-Internal motto: **Pedal to the Medal** — keep moving, stay professional,
-document everything, and turn the role into operational advantage.
+Internal motto: **Pedal to the Medal** - keep moving, stay professional, document everything.
 
 ---
 
-## Why the Product Shifted
+## Current Direction
 
-The original prototypes were built while Shane was in **dump truck dispatch**.
-Shane is now in **concrete mixer dispatch** and has been asked to serve as a
-**Customer Service Representative (CSR)**.
+This project is now centered on Shane's current concrete mixer dispatch and CSR work, plus the fact that company GPT access exists. That changes the build priorities:
 
-That changes the priority. Melvin now supports the concrete dispatch office
-**first**: customer calls, order changes, will-calls, pour timing, plant
-coordination, mixer availability, complaints, ticket/POD follow-up, a callback
-queue, and an end-of-day carry list.
+- support live CSR follow-up discipline without exposing private data
+- make mixer status, call logs, order changes, complaints, and callbacks easy to capture
+- keep real rosters, phone numbers, customer details, dispatch screenshots, and workbooks out of public GitHub
+- use public-safe placeholder data in this repo
+- treat old dump-truck logic as legacy reference, not the main product direction
 
-The original dump-truck route engine is **preserved intact** as the secondary
-**Legacy Dump Dispatch** module — it is no longer the default view.
-
-The product's job: reduce dropped balls, create written records, keep follow-ups
-visible, and make the CSR look organized, calm, and professional.
+The old public `srm-dispatch` repo is no longer a safe source of truth. Do not re-import its live operational data into this repo.
 
 ---
 
@@ -34,87 +26,92 @@ visible, and make the CSR look organized, calm, and professional.
 
 The app opens on the **Today Board**, which answers:
 
-- What is happening today? Who called?
-- What orders changed? What pours are at risk?
-- What customers need a callback (and which are overdue)?
-- What plants / trucks / drivers are causing delays?
-- What did I already handle? What is still open?
-- What needs to be carried to tomorrow?
+- What is happening today?
+- Who called and what still needs follow-up?
+- What orders changed and who needs to know?
+- Which pours, trucks, plants, or callbacks are at risk?
+- What did I handle already?
+- What needs to carry into tomorrow?
 
-It rolls up every other module into one scannable command board with risk flags
-and a ranked top-priorities list.
+It rolls up every active module into one scannable command board with risk flags and ranked priorities.
 
 ---
 
 ## MVP Features
 
-### Concrete Mixer Dispatch / CSR (primary)
-- **Today Board** — live rollup of all streams, risk flags, top priorities
-- **Customer Calls** — log every call (request type, urgency, status, follow-up)
-- **Order Changes** — who changed what, when, who approved, who was told
-- **Mixer Dispatch** — live mixer truck status board (available / active / down)
-- **Issues / Complaints** — owner, immediate action, who was notified, follow-up
-- **Callback Queue** — due / overdue follow-ups that stay visible until done
+### Concrete Mixer Dispatch / CSR
+
+- **Today Board** - live rollup of calls, callbacks, order changes, issues, mixer status, and risk flags
+- **Customer Calls** - local entry and browser persistence for call records
+- **Callback Queue** - local entry, complete controls, and overdue visibility
+- **Order Changes** - local entry and status tracking
+- **Mixer Dispatch** - sample mixer status board
+- **Issues / Complaints** - local entry and resolution tracking
 
 ### Operations
-- **Weather** — dispatch-risk forecast (seed data) with pour-risk notes
-- **Briefing** — plain-text Morning / End-of-Day / Weekly briefings (copy / push / TTS)
-- **Repairs** — fleet repair tickets with status and priority
-- **Management** — mission, values, SOPs, and CSR phone scripts
-- **Health** — app status, storage mode, future-service connectivity
-- **Settings / Data** — tenant config, storage, privacy notes
+
+- **Weather** - seed dispatch-risk forecast
+- **Briefing** - Morning / End-of-Day / Weekly text scaffolds
+- **Repairs** - fleet repair ticket scaffold
+- **Management** - SOPs and CSR scripts
+- **Health** - app status and future-service placeholders
+- **Settings / Data** - tenant config, storage, privacy notes
 
 ### Legacy
-- **Legacy Dump Dispatch** — full dump-truck route engine preserved (BP rotation,
-  514 chain rule, 518 call/check, TF overrides, fixed routes, copy-to-clipboard)
+
+- **Legacy Dump Dispatch** - preserved reference module for prior dump-truck route logic. It is not the current product center.
 
 ---
 
-## Source Repos Consolidated
+## Privacy Boundary
 
-| Repo | Contribution |
-|------|-------------|
-| shanebrain-core | Local-first architecture, MCP/memory concepts, service model |
-| srm-dispatch | Dump-truck route engine (preserved as legacy module) |
-| pedal-to-the-metal | Fairness engine, product model |
-| MASTER-Scheduler-Dashboard-SRM | Scheduler / dashboard / PWA patterns |
-| SB-Management-OS | SOPs, operating standards |
-| shanebrain-briefing | Briefing structure (push / TTS / log) |
-| 2.0RepairTrucks | Repair tracking model |
-| weather-log | Weather + dispatch-risk pattern |
-| order-calendar, mega-dashboard(-template), srm-operations-demo, constitution, shanebrain-agents | Conceptual references |
+This is a public repository. It must stay clean.
+
+Allowed:
+
+- placeholder contacts
+- synthetic driver names
+- fictional customers
+- generic workflow examples
+- product code and docs
+
+Not allowed:
+
+- real driver rosters
+- phone numbers
+- customer/job/order/POD/ticket details
+- dispatch screenshots
+- Excel/CSV exports
+- company GPT transcripts with private SRM content
+
+See `PRIVACY.md` for the standing rules.
 
 ---
 
 ## Local-First Design
 
-Melvin runs entirely in the browser. **No backend required for the MVP.**
+Melvin currently runs entirely in the browser. No backend is required for the MVP.
 
-- Phase 1 uses public-safe seed data; state will persist in browser localStorage (`melvin_os_*`)
-- Works offline after first load
-- Future optional services: Ollama (local LLM), Weaviate (memory), MCP, FastAPI, systemd, backup/export
-
-See `docs/local-first-roadmap.md` for the full plan and the `melvin-*` service map.
+- Phase 1 uses public-safe seed data and browser localStorage (`melvin_os_*`)
+- Real operational data should stay local/private
+- Export/backup is the next protection priority
+- Future optional services: FastAPI, SQLite, local backup, company-approved GPT workflow, MCP, and memory/search
 
 ---
 
 ## SRM North Alabama Tenant
 
-Tenant data lives in `src/tenants/srm-north-alabama/` and is **public-safe**:
+Tenant data lives in `src/tenants/srm-north-alabama/` and is public-safe by design.
 
 | File | Contents |
-|------|---------|
-| drivers.js | Legacy dump driver roster, BP groups, rota arrays |
-| mixers.js | Sample mixer fleet + simple mixer driver roster |
-| plants.js | 18 plant codes with names and substitution chains |
-| customers.sample.js | Fictional sample customers only |
-| contacts.js | **Placeholder** contact tokens only (no real phone numbers) |
-| rotations.js | Epoch/cycle config for BP and rota calculations |
-| rules.js | CSR operating rules + legacy dispatch rules |
-
-> **Privacy:** This public repo contains placeholder contacts and sample
-> customers only. Real rosters, phone numbers, and customer data must live in a
-> local, untracked config — never committed here.
+|------|----------|
+| `drivers.js` | Legacy placeholder dump-driver roles only |
+| `mixers.js` | Generic sample mixer fleet and sample driver roster |
+| `plants.js` | Plant codes and substitution chains used for workflow scaffolding |
+| `customers.sample.js` | Fictional sample customers only |
+| `contacts.js` | Placeholder contact tokens only |
+| `rotations.js` | Sample rotation/cycle config |
+| `rules.js` | CSR operating rules and legacy dispatch rules |
 
 ---
 
@@ -129,66 +126,11 @@ npm run preview   # preview the production build
 
 ---
 
-## Architecture Overview
-
-```
-src/
-  main.jsx · App.jsx
-  app/
-    MelvinShell.jsx     # sidebar nav + module routing (default: Today)
-    navigation.js
-  components/           # Badge, Pill, StatCard, SectionHeader, EmptyState
-  modules/
-    today/              # TodayBoard, todayModel, riskFlags  (default view)
-    customer-service/   # CustomerCallsPanel, CallbackQueue + models
-    orders/             # OrderChangesPanel + model
-    mixer-dispatch/     # MixerDispatchBoard + model
-    issues/             # IssuesPanel + model
-    weather/  briefing/  repairs/  management/  health/  settings/
-    legacy-dump-dispatch/   # preserved dump-truck engine + UI
-      engine/           # buildRoute, rotation, substitutions, travelTimes, fairness
-      hooks/  components/
-  tenants/srm-north-alabama/   # public-safe tenant data
-  styles/               # theme.js (warm dark tones) + global.css
-  utils/                # clipboard, date, storage, ids
-docs/
-  source-review/shanebrain-core-findings.md
-  memory-model.md · local-first-roadmap.md
-```
-
-Business logic (models / engine, plain `.js`) is kept separate from React UI
-(`.jsx` panels).
-
----
-
-## What Is Scaffolded (Not Yet Wired)
-
-- CSR records are **seed/sample data**; entry forms + localStorage persistence are Phase 2
-- Briefing End-of-Day / Weekly are working scaffolds (`buildEndOfDayCloseout`, `buildWeeklyReport`)
-- Legacy `useUrlState` / `fairness` written but not surfaced in the new shell
-- Weather API — seed data only (`VITE_WEATHER_API_KEY` placeholder in `.env.example`)
-- MCP / backup / memory — placeholders (Phase 2–3)
-
----
-
-## Security / What Was Skipped
-
-`docs/source-review/shanebrain-core-findings.md` documents which source files
-were intentionally not read (credentials, vault, SSH, private IPs) and which
-patterns were safely extracted. Real phone numbers found hardcoded in the
-existing code were sanitized to placeholder tokens during this build.
-
----
-
 ## Next Best Tasks
 
-1. Add entry forms + localStorage persistence for calls, callbacks, orders, issues
-2. Wire mixer status updates (status stepper, ETA edit) into the board
-3. Carry-list automation: end-of-day "carry to tomorrow" → next-day Today Board
-4. PWA manifest + service worker for offline field use
-5. Phase 2: `melvin-api` FastAPI backend scaffold
-6. Phase 3: `melvin-mcp` server connecting to ShaneBrain memory
-
----
-
-Built with [Claude Code](https://claude.ai/code).
+1. Add export/backup for browser-local CSR records.
+2. Add PWA manifest + service worker for offline use.
+3. Wire mixer status updates into the Today Board.
+4. Add end-of-day carry-forward into next-day Today Board.
+5. Add a private/local data adapter for real company data.
+6. Keep company GPT workflows outside public GitHub unless fully sanitized.

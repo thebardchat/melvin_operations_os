@@ -1,102 +1,100 @@
 # Melvin Local-First Roadmap
 
-## Service map (future)
+## Direction
 
-The MVP is a single web app (`melvin-web`). The local-first platform grows into
-these optional services, all running on the Pi 5 / local hardware:
+Melvin is now focused on concrete mixer dispatch and CSR work. The old dump-truck workflow remains as a legacy reference module, but new development should prioritize mixer availability, customer calls, callbacks, order changes, complaints, repairs, briefings, and safe company GPT support.
 
-- `melvin-web` — this Vite + React front end (the MVP)
-- `melvin-api` — FastAPI backend for persistence and sync
-- `melvin-worker` — background scheduled tasks (systemd timer)
-- `melvin-mcp` — MCP server exposing Melvin tools to Claude Code
-- `melvin-agents` — agent orchestration
-- `melvin-briefing` — push/TTS/log the daily briefing
-- `melvin-backup` — local backup/export
-- `melvin-health` — service health monitoring
-
-Optional infra introduced over time: Ollama (local LLM), Weaviate (semantic
-memory), MCP, FastAPI, systemd services, and a backup/export system. None are
-required for the MVP.
+This public repo must use sample data only. Real SRM data belongs in local/private storage or approved company systems.
 
 ---
 
-## Phase 1 — Current MVP (Browser-Only) — `melvin-web`
+## Service map
+
+The MVP is a single web app (`melvin-web`). The local-first platform can grow into these optional services:
+
+- `melvin-web` - this Vite + React front end
+- `melvin-api` - FastAPI backend for persistence and sync
+- `melvin-backup` - local export/backup tools
+- `melvin-worker` - scheduled background tasks
+- `melvin-health` - service health monitoring
+- `melvin-briefing` - daily briefing builder
+- `melvin-mcp` - future tool surface for approved local agent workflows
+
+Optional infrastructure later: SQLite, local file backup, Ollama, Weaviate, MCP, systemd services, and company-approved GPT workflows. None are required for the MVP.
+
+---
+
+## Phase 1 - Browser-only MVP
 
 **Status:** In progress  
 **Stack:** Vite + React, browser localStorage, no backend
 
 - [x] Vite React app scaffolded
-- [x] SRM North Alabama tenant data (public-safe placeholders)
-- [x] **Today Board (default view)** — CSR command board
-- [x] Customer Calls log (local entry + browser persistence)
-- [x] Callback Queue (local entry/complete + browser persistence)
-- [x] Order Change tracker (local entry/status + browser persistence)
-- [x] Mixer Dispatch board
-- [x] Issues / Complaints log (local entry/resolve + browser persistence)
-- [x] Weather panel (seed data)
-- [x] Briefing generator (morning / end-of-day / weekly)
-- [x] Repairs tracker (seed data)
-- [x] Management / SOPs / CSR scripts panel
-- [x] System health panel
+- [x] Public-safe SRM North Alabama tenant placeholders
+- [x] Today Board default view
+- [x] Customer Calls log with local entry + browser persistence
+- [x] Callback Queue with local entry/complete + browser persistence
+- [x] Order Change tracker with local entry/status + browser persistence
+- [x] Issues / Complaints log with local entry/resolve + browser persistence
+- [x] Mixer Dispatch board with sample data
+- [x] Weather panel with seed data
+- [x] Briefing generator scaffold
+- [x] Repairs tracker scaffold
+- [x] Management / SOP / CSR scripts panel
+- [x] Health panel
 - [x] Settings / Data panel
-- [x] Legacy Dump Dispatch module (route engine preserved)
-- [ ] PWA manifest + service worker (offline capable)
+- [x] Legacy Dump Dispatch module preserved as reference
+- [x] Public privacy rules documented in `PRIVACY.md`
 - [ ] Export / backup for browser-local records
+- [ ] PWA manifest + service worker
+- [ ] Mixer status update controls
+- [ ] End-of-day carry-forward into next-day Today Board
 
 ---
 
-## Phase 2 — melvin-api + Persistence
+## Phase 2 - Private/local persistence
 
-**Status:** Planned  
-**New services:** `melvin-api` (FastAPI), `melvin-backup`
+**Status:** Planned
 
-- [ ] FastAPI backend at `/api` (same origin or VITE_MCP_URL)
-- [ ] SQLite for repair records, shift notes, dispatch logs
-- [ ] REST endpoints: `/api/repairs`, `/api/shifts`, `/api/routes`
-- [ ] Daily automatic backup to local RAID or external drive
-- [ ] Weather API integration (OpenWeatherMap via VITE_WEATHER_API_KEY)
-- [ ] Live weather with dispatch risk scoring
-- [ ] Repair CRUD (create, update, resolve tickets)
+- [ ] FastAPI backend at `/api`
+- [ ] SQLite for CSR records, repairs, shift notes, and dispatch logs
+- [ ] Local backup/export folder outside Git
+- [ ] Import/export workflow for sanitized CSV only
+- [ ] Private data adapter for real company data
+- [ ] Weather API integration through private env config
+- [ ] Repair CRUD
 - [ ] Shift note creation and history
 
 ---
 
-## Phase 3 — melvin-mcp + Weaviate Memory
+## Phase 3 - Company GPT support
 
-**Status:** Planned  
-**New services:** `melvin-mcp` (MCP server), `melvin-agents`, `melvin-briefing`
+**Status:** Planned
 
-- [ ] MCP server exposing Melvin tools to Claude Code
-- [ ] Connect to ShaneBrain Weaviate (neworleans:8080) or Melvin-local Weaviate
-- [ ] Weaviate collections: MelvinKnowledge, MelvinConversation, MelvinShiftNote, etc.
-- [ ] `melvin_search_knowledge` — RAG over SOPs and routing rules
-- [ ] `melvin_log_dispatch` — auto-log every route to Weaviate
-- [ ] `melvin_daily_briefing` — structured morning briefing with memory context
-- [ ] `melvin_chat` — conversational interface with history
-- [ ] Morning briefing pushed to ShaneBrain Discord at 5 AM
-- [ ] Conversation history stored and searchable
+- [ ] Define what company GPT may receive and what must stay out
+- [ ] Add copy-safe briefing formats that remove private details by default
+- [ ] Add redaction helpers for names, phone numbers, customer/job details, and truck tokens
+- [ ] Add approved prompt templates for CSR summaries, EOD notes, and backlog drafting
+- [ ] Keep GPT transcripts out of public GitHub
 
 ---
 
-## Phase 4 — melvin-worker + Full Automation
+## Phase 4 - Local automation
 
-**Status:** Future  
-**New services:** `melvin-worker`, `melvin-health`
+**Status:** Future
 
-- [ ] Background worker for scheduled tasks (systemd timer)
-- [ ] Auto-ingest: shift notes, repair logs, weather data → Weaviate
-- [ ] melvin-health: monitors all Melvin services, pushes alerts to Discord
-- [ ] Fairness engine: flag burnout, auto-suggest driver rotations
-- [ ] Route audit: flag unusual patterns against historical baseline
-- [ ] Multi-tenant: second tenant onboarding (template system)
-- [ ] Reporting: weekly summaries, monthly fleet health
+- [ ] Background worker for scheduled backups and reports
+- [ ] Service health alerts
+- [ ] Fairness and burnout flags for mixer operations
+- [ ] Route/order audit against historical baseline
+- [ ] Weekly summaries and fleet health reports
 
 ---
 
-## Architecture Principles
+## Architecture principles
 
-1. **Local first** — works without internet, syncs when available
-2. **No vendor lock-in** — all data stays on your hardware
-3. **ADHD-aware** — one screen, one task, minimal cognitive load
-4. **Extensible tenant model** — `src/tenants/` makes adding a new company a clean folder
-5. **80/20 shipping** — ship the useful thing fast, iterate from real usage
+1. **Privacy first** - public repo contains sample data only
+2. **Local first** - useful without a cloud backend
+3. **Dispatcher speed** - one screen, fast capture, low cognitive load
+4. **Company-safe GPT** - approved prompts and redaction before sharing sensitive context
+5. **Iterate from real usage** - build what protects time, follow-up, and accountability
