@@ -37,6 +37,7 @@ Optional infrastructure later: SQLite, local file backup, Ollama, Weaviate, MCP,
 - [x] Order Change tracker with local entry/status + browser persistence
 - [x] Issues / Complaints log with local entry/resolve + browser persistence
 - [x] Mixer Dispatch board with sample data
+- [x] Mixer status update controls with browser persistence
 - [x] Weather panel with seed data
 - [x] Briefing generator scaffold
 - [x] Repairs tracker scaffold
@@ -47,7 +48,6 @@ Optional infrastructure later: SQLite, local file backup, Ollama, Weaviate, MCP,
 - [x] Public privacy rules documented in `PRIVACY.md`
 - [x] Export / import / clear controls for browser-local records
 - [ ] PWA manifest + service worker
-- [ ] Mixer status update controls
 - [ ] End-of-day carry-forward into next-day Today Board
 
 ---

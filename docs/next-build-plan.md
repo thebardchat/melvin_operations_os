@@ -8,7 +8,7 @@ Protect real SRM information while moving Melvin toward current concrete mixer a
 
 1. Build browser-local export/backup for calls, callbacks, order changes, and issues. - DONE
 2. Add PWA manifest and service worker so the app remains usable offline.
-3. Add mixer status update controls: available, loading, on job, returning, down, off duty.
+3. Add mixer status update controls: available, loading, on job, returning, down, off duty. - DONE
 4. Add end-of-day carry-forward so unresolved callbacks/issues show on the next Today Board.
 5. Add company GPT safe-copy templates that redact private details by default.
 
